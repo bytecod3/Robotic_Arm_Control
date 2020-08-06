@@ -646,14 +646,14 @@ class Main:
 
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        current_time = str(current_time+'...')
+        current_time = str(current_time)
         self.ctime.config(text=current_time)
 
         user = os.getlogin()
-        self.uname.config(text=user+'...')
+        self.uname.config(text=user)
 
         opsys = sys.platform
-        self.operatingsys.config(text=opsys+'...')
+        self.operatingsys.config(text=opsys)
 
         all_coordinates = self.get_all_coordinates()
 
@@ -662,11 +662,11 @@ class Main:
         self.pick_coords.config(text=all_coordinates[0])
         self.place_coords.config(text=all_coordinates[1])
 
-        self.servo_speed.config(text=str(self.get_servo_speed())+'...')
+        self.servo_speed.config(text=str(self.get_servo_speed()))
 
-        self.object.config(text=str(self.get_no_of_objects())+'...')
+        self.object.config(text=str(self.get_no_of_objects()))
 
-        self.run_mode.config(text=str(self.console_mode())+'...')
+        self.run_mode.config(text=str(self.console_mode()))
 
         # create connection with the Arduino board
         self.connect_status = ArduinoConnection.create_arduino_connection(self.get_port())
