@@ -27,40 +27,40 @@ class LoginForm(ttk.Frame):
         """Constructor"""
         ttk.Frame.__init__(self, parent)
         self.parent = parent
-        
+
         window_width = 470
         window_height = 150
         screen_width = self.parent.winfo_screenwidth()
         screen_height = self.parent.winfo_screenheight()
-        
+
         x_position = int((screen_width/2) - (window_width/2))
         y_position = int((screen_height/2) - (window_height/2))
-        
+
         self.parent.geometry("{}x{}+{}+{}".format(window_width, window_height, x_position, y_position))
 
         self.parent.title("IRSS|Login")
         self.parent.configure(background='gray40')
-        
+
         self.widgeter()
-    
+
     def widgeter(self, *args):
         """Create widgets for login window"""
         self.parent.bind("<Return>", self.verify_password_a)
         self.btnConf = {'font': ('verdana', 9), 'background': 'slategray', 'padx': '4', 'width': '8', 'pady': '4'}  # button configurations
         self.logo = Label(self.parent, text="IRSS", background='gray40', pady=10, font=('verdana', 13))
-        
+
         self.password = Entry(self.parent, font=('verdana', 12), justify="center")
         self.password.configure(show="*")
         self.password.focus()
         self.filler = Label(self.parent, text="",background='gray40',  pady=10, font=('verdana', 13))
         self.login_btn = Button(self.parent, self.btnConf, text="Login", pady=5, relief=RIDGE,  command=self.verify_password)   # mouse click
 
-        # place the widgets    
+        # place the widgets
         self.logo.pack()
         self.password.pack()
         self.filler.pack()
         self.login_btn.pack()
-            
+
     def verify_password(self, event=None):
         """Verify the password"""
         # get the password
@@ -70,33 +70,33 @@ class LoginForm(ttk.Frame):
         else:
             # proceed to the main window
             self.initialize_main_application()
-            
+
     def verify_password_a(self, event):
         """Respond to enter key press"""
         self.verify_password()
-    
+
     def initialize_main_application(self):
         """Show the main window if password correct"""
         self.parent.destroy()
         self.parent = Tk()
         self.main = Main(self.parent)
         self.parent.mainloop()
-            
-            
+
+
 class Main:
     def __init__(self, parent):
         self.parent = parent
-        
+
         # view fullscreen
         screen_width = self.parent.winfo_screenwidth()
-        screen_height = self.parent.winfo_screenheight()   
+        screen_height = self.parent.winfo_screenheight()
         self.parent.geometry("{}x{}".format(screen_width, screen_height))
         self.parent.title("IRSS | Control Software")
-        self.parent.state('zoomed')
+        # self.parent.state('normal')
         self.parent.configure(background='gray40')
-        
+
         self.create_widgets()
-        
+
     def create_widgets(self):
         """Create Widgets for the main window"""
 
@@ -151,7 +151,7 @@ class Main:
                         width=10,
                         command=self.check_current_mode,
                         selectcolor='lawngreen').pack(side=LEFT, padx=18, pady=5)
-        
+
         # ==============================Pick coordinates frame================================================
         self.pick_group = LabelFrame(leftFrame, text="Pick Position", font=('arial',11, 'bold'))
         self.pick_group.configure(background='gray40')
@@ -711,7 +711,7 @@ class Main:
         pass
 
     def exit(self):
-        pass
+        self.parent.destroy()
 
 if __name__ == "__main__":
     root = Tk()
