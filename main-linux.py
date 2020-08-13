@@ -130,7 +130,6 @@ class Main:
                         background='gray10',
                         font=('verdana', 11, 'bold'),
                         width=10,
-                        command=self.check_current_mode,
                         selectcolor='lawngreen').pack(side=LEFT, padx=18, pady=5)
 
         self.intelligent_mode = Radiobutton(self.mode,
@@ -141,7 +140,6 @@ class Main:
                         background='gray10',
                         font=('verdana', 11, 'bold'),
                         width=10,
-                        command=self.check_current_mode,
                         selectcolor='lawngreen').pack(side=LEFT, padx=18, pady=5)
 
         self.remote_mode = Radiobutton(self.mode,
@@ -152,7 +150,7 @@ class Main:
                         background='gray10',
                         font=('verdana', 11, 'bold'),
                         width=10,
-                        command=self.check_current_mode,
+                        command=self.initialize_remote_panel,
                         selectcolor='lawngreen').pack(side=LEFT, padx=18, pady=5)
 
         # ==============================Pick coordinates frame================================================
@@ -625,12 +623,14 @@ class Main:
 
 
 
-    def check_current_mode(self):
-        """call respective functions for the selected robot operation mode"""
+    def initialize_remote_panel(self):
+        """initialize remote control panel for remote control mode"""
 
         # update status bar
+        self.parent = Tk()
+        self.main = RemotePanel(self.parent)
+        self.parent.mainloop()
 
-        print(self.mode_var.get())
 
     def console_mode(self):
         """Display the current mode of operation"""
@@ -717,6 +717,105 @@ class Main:
 
     def exit(self):
         self.parent.destroy()
+
+
+class RemotePanel:
+    def __init__(self, parent):
+        '''constructor'''
+        self.parent = parent
+        self.parent.title('Remote Control Panel')
+        self.parent.config(background='gray40')
+
+        # set standard size
+        height = 320
+        width = 800
+        screenWidth = self.parent.winfo_screenwidth()
+        screenHeight = self.parent.winfo_screenheight()
+
+        # center the panel
+        xPosition = int((screenWidth/2) - (width/2))
+        yPosition = int((screenHeight/2) - (height/2))
+
+        self.parent.geometry("{}x{}+{}+{}".format(width, height, xPosition, yPosition))
+
+        self.widgeter()
+    
+    def widgeter(self):
+        '''create remote panel widgets'''
+        self.frame_right = Frame(self.parent, background='gray40')  # create frame to hold button LEDs
+
+        title_label_config = {'background':'gray40', 'font':('verdana',12, 'bold')}
+        self.motors = Label(self.frame_right, title_label_config, text='Motor')
+        self.motors.grid(column=0, row=0)
+
+        # create motor labels
+        motor_dict = {1:'Base', 2:'Shoulder', 3:'Elbow', 4:'Wrist', 5:'Gripper'}
+        motor_lbl_config = {'background':'gray40', 'font':('verdana',12), 'foreground':'black'}
+        for key in motor_dict:
+             Label(self.frame_right,motor_lbl_config, text=motor_dict[key]).grid(column=0, row=key, pady=12)
+
+        self.position = Label(self.frame_right,title_label_config, text='Position(deg)')
+        self.position.grid(column=1, row=0)
+
+        # create labels to display the current motor position in degrees
+        pos_config = {'background':'black', 'relief':RAISED, 'font':('verdana',12), 'foreground':'lawngreen'}
+        self.basePos = Label(self.frame_right,pos_config, text='20')
+        self.shoulderPos = Label(self.frame_right,pos_config, text='30')
+        self.elbowPos = Label(self.frame_right,pos_config, text='60')
+        self.wristPos = Label(self.frame_right,pos_config, text='120')
+        self.gripperPos = Label(self.frame_right,pos_config, text='50')
+
+        self.basePos.grid(column=1, row=1, ipadx=20)
+        self.shoulderPos.grid(column=1, row=2, ipadx=20)
+        self.elbowPos.grid(column=1, row=3, ipadx=20)
+        self.wristPos.grid(column=1, row=4, ipadx=20)
+        self.gripperPos.grid(column=1, row=5, ipadx=20)
+
+        # separator
+        # ttk.Separator(self.frame_right, orient=HORIZONTAL).grid(sticky=N+E)
+
+        self.frame_right.grid(column=0, row=0) # pack the right frame
+
+        # create the middle frame
+        self.frame_center = Frame(self.parent, background='gray40')
+
+        #frequency display label
+        self.freq_label = Label(self.frame_center, foreground='black',bg='gray40', font=('verdana', 12),text='Channel frequency:')
+        self.freq_display = Entry(self.frame_center, fg='green')
+        self.freq_display.insert(0, '300.5MHz')
+        self.freq_display.grid(row=0, column=1)
+        self.freq_label.grid(row=0, column=0)
+        self.frame_center.grid(row=0, column=1, ipadx=10)
+
+
+        self.frame_left = Frame(self.parent, background='gray40')
+        # operation buttons
+        btn_config = {'background': 'black', 'foreground':'red', 'font':('verdana', 12, 'bold')}
+        self.run = Button(self.frame_left,btn_config, text='RUN')
+        self.stop = Button(self.frame_left, btn_config,text='STOP')
+        self.exit = Button(self.frame_left, btn_config,text='EXIT')
+
+        # pack the buttons
+        self.run.grid(row=0, column=0, pady=15)
+        self.stop.grid(row=1, column=0, pady=15)
+        self.exit.grid(row=2, column=0, pady=15)
+
+        self.frame_left.grid(column=2, row=0)  # pack the left frame
+
+
+        # status bar
+        self.status_bar = Frame(self.parent, bg='gray40')
+        
+        # create LED
+        self.running_led = tools.Led(self.status_bar, size=50)
+        self.running_led.to_green()
+        self.running_led.grid(row=0, column=0)
+
+        self.stat_lbl = Label(self.status_bar,text='Running', font=('consolas', 12, 'bold'), bg='gray40', fg='green')
+        self.stat_lbl.grid(row=0, column=1, ipadx=15)
+
+        self.status_bar.grid(row=1, column=0)
+
 
 if __name__ == "__main__":
     root = Tk()
