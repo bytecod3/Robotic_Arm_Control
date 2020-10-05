@@ -5,7 +5,7 @@ A custom control software for robotic manipulator used for basic pick and place 
   - Remote controlled
   - Intelligent Camera mode
 
-External packages:
+**External PACKAGES**
  -pylive
  -tk_tools
  
