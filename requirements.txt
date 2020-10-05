@@ -1,0 +1,6 @@
+tk_tools
+pyserial
+pyfirmata
+pmw
+python3-tk
+matplotlib
