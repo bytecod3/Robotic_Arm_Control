@@ -4,9 +4,8 @@ Main Interface For the Robotic Arm Control Software
 Author: Edwin Mwiti
 Copyright: 2020
 
-Interface customized for ubuntu linux
+Interface customized for linux
 """
-
 
 # imports
 from tkinter import *
